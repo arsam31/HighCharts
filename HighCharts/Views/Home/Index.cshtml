@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+    <div class="card">
+        <div class="card-header">
+            Profit & Loss
+        </div>
+        <div class="card-body">
+            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+    </div>
+@section Scripts{
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script>
+       
+        function loadChart(data) {
+                Highcharts.chart('container', {
+                    chart: {
+                        type: 'column',
+
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: ['Markets'],
+
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        enabled: true
+                    },
+                    series: data,
+                    plotOptions: {
+                        column: {
+                            dataLabels: {
+                                enabled: true,
+                                formatter: function () {
+                                    return '<span>' + this.series.name + '</span>';
+                                    //< !-- return '<span>' + this.series.name + " (" + this.series.data[0].y + ")" + '</span>'; -->
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+        }
+        $(function () {
+            //Gat Data
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetProfitLossChartData", "Home")",
+                data: {},
+                success: function (data) {
+                    loadChart(data);
+                    
+                }
+            });
+
+
+
+            //function getData() {
+            //    setInterval(function () {
+            //        fetch('https://api.cryptonator.com/api/ticker/btc-usd').then(function (response) {
+            //            return response.json()
+            //        }).then(function (data) {
+            //            chart.series[0].addPoint({ x: data.timestamp * 1000, y: Number(data.ticker.price) })
+            //        })
+            //    }, 3000)
+            //}
+        });
+    </script>
+
+}
+
